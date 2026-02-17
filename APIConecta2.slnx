@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="Conecta2.API/Conecta2.API.csproj" />
+  <Project Path="Conecta2.BLL/Conecta2.BLL.csproj" />
+  <Project Path="Conecta2.DAL/Conecta2.DAL.csproj" />
+  <Project Path="Conecta2.DTO/Conecta2.DTO.csproj" />
+  <Project Path="Conecta2.IOC/Conecta2.IOC.csproj" />
+  <Project Path="Conecta2.Model/Conecta2.Model.csproj" />
+  <Project Path="Conecta2.Utility/Conecta2.Utility.csproj" />
+</Solution>
