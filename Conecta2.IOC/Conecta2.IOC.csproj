@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Conecta2.BLL\Conecta2.BLL.csproj" />
+    <ProjectReference Include="..\Conecta2.DAL\Conecta2.DAL.csproj" />
+    <ProjectReference Include="..\Conecta2.Utility\Conecta2.Utility.csproj" />
+  </ItemGroup>
+
 </Project>

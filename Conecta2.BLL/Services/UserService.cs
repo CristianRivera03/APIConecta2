@@ -1,0 +1,134 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Text;
+
+using AutoMapper;
+using Conecta2.BLL.Services.Contract;
+using Conecta2.DAL.Repositories.Contract;
+using Conecta2.DTO;
+using Conecta2.Model;
+using Microsoft.Extensions.Logging;
+
+namespace Conecta2.BLL.Services
+{
+    public class UserService : IUserService
+    {
+        private readonly IGenericRepository<User> _userRepository;
+        private readonly IMapper _mapper;
+        private readonly ILogger<UserService> _logger;
+
+        public UserService(IGenericRepository<User> userRepository, IMapper mapper, ILogger<UserService> logger)
+        {
+            _userRepository = userRepository;
+            _mapper = mapper;
+            _logger = logger;
+        }
+
+        public async Task<List<UserDTO>> GetAllAsync()
+        {
+            try
+            {
+                var listUsers = await _userRepository.Query();
+                return _mapper.Map<List<UserDTO>>(listUsers.ToList());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error to get the users");
+                throw;
+            }
+        }
+        public async Task<SessionDTO> CheckCredentials(string email, string password)
+        {
+            try
+            {
+                var queryUser = await _userRepository.Query(
+                    u => u.Email == email &&
+                    u.PasswordHash == password);
+
+                if (queryUser.FirstOrDefault() == null)
+                    throw new TaskCanceledException("El usuario no existe");
+
+                return _mapper.Map<SessionDTO>(queryUser);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error to get the user");
+                throw;
+            }
+        }
+
+        public async Task<UserDTO> Create(UserDTO model)
+        {
+            try
+            {
+                var userCreated = await _userRepository.Create(_mapper.Map<User>(model));
+                if (userCreated.IdUser == Guid.Empty)
+                    throw new TaskCanceledException("El usuario no se puedo crear ");
+
+                return _mapper.Map<UserDTO>(userCreated);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating a new user");
+                throw;
+            }
+        }
+        public async Task<bool> Update(UserDTO model)
+        {
+
+            try
+            {
+            var userModel = _mapper.Map<User>(model);
+            var userFound = await _userRepository.Get(u => u.IdUser == userModel.IdUser);
+
+            if (userFound == null)
+                throw new TaskCanceledException("El usuario no existe");
+
+            userFound.NameUser = userModel.NameUser;
+            userFound.LastnameUser = userModel.LastnameUser;
+            userFound.Username = userModel.Username;
+
+                bool response = await _userRepository.Update(userFound);
+
+                if (!response)
+                    throw new TaskCanceledException("El usuario no se pudo actualizar");
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating the user with ID: {UserId}", model.IdUser);
+                throw;
+            }
+        }
+
+
+        public async Task<bool> Delete(Guid id)
+        {
+            try
+            {
+                var userFound = await _userRepository.Get(u => u.IdUser == id);
+
+                if (userFound == null)
+                    throw new TaskCanceledException("El usuario no existe");
+
+                userFound.IsActive = false;
+                userFound.DeleteAt = DateTime.UtcNow;
+
+                bool response = await _userRepository.SoftDelete(userFound);
+
+                if (!response)
+                    throw new TaskCanceledException("El usuario no se pudo eliminar ");
+                return response;
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting user with ID: {UserId}", id);
+                throw;
+            }
+        }
+    }
+}

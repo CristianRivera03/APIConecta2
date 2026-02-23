@@ -8,6 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.12.41" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Conecta2.BLL\Conecta2.BLL.csproj" />
+    <ProjectReference Include="..\Conecta2.DTO\Conecta2.DTO.csproj" />
+    <ProjectReference Include="..\Conecta2.IOC\Conecta2.IOC.csproj" />
   </ItemGroup>
 
 </Project>

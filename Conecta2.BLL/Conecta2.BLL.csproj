@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Conecta2.DAL\Conecta2.DAL.csproj" />
+    <ProjectReference Include="..\Conecta2.DTO\Conecta2.DTO.csproj" />
+    <ProjectReference Include="..\Conecta2.Model\Conecta2.Model.csproj" />
+    <ProjectReference Include="..\Conecta2.Utility\Conecta2.Utility.csproj" />
+  </ItemGroup>
+
 </Project>

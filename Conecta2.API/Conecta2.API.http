@@ -1,6 +1,14 @@
-@Conecta2.API_HostAddress = http://localhost:5160
+@Conecta2.API_HostAddress = https://localhost:7019
 
 GET {{Conecta2.API_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+GET {{Conecta2.API_HostAddress}}/weatherforecast
+
+###
+
+GET {{Conecta2.API_HostAddress}}/api/category/get
 
 ###
