@@ -21,7 +21,7 @@ namespace Conecta2.API.Controllers
 
         //metodo para obtener
         [HttpGet]
-        [Route("get")]
+        [Route("Get")]
         public async Task<IActionResult> Get()
         {
             var rsp = new Response<List<CategoryDTO>>();

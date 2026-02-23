@@ -28,7 +28,9 @@ public static class Dependency
         services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
         //automapper
-        services.AddAutoMapper(typeof(AutoMapperProfile));
+        services.AddAutoMapper(cfg => {
+            cfg.AddProfile<AutoMapperProfile>();
+        }, typeof(AutoMapperProfile));
 
 
         services.AddScoped<ICategoryService, CategoryService>();

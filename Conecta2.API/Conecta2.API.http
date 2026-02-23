@@ -6,9 +6,8 @@ Accept: application/json
 ###
 
 GET {{Conecta2.API_HostAddress}}/weatherforecast
-
 ###
 
-GET {{Conecta2.API_HostAddress}}/api/category/get
+GET {{Conecta2.API_HostAddress}}/api/category/Get
 
 ###
