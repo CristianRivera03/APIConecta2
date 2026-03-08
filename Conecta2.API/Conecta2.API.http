@@ -10,4 +10,18 @@ GET {{Conecta2.API_HostAddress}}/weatherforecast
 
 GET {{Conecta2.API_HostAddress}}/api/category/Get
 
+
+###
+POST {{Conecta2.API_HostAddress}}/api/user/Login
+Content-Type: application/json
+
+{
+  "email": "cristian@correo.com",
+  "password": "trikitrakatelas"
+}
+
+###
+
+GET {{Conecta2.API_HostAddress}}/api/post/Get
+
 ###

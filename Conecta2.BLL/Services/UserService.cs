@@ -8,6 +8,7 @@ using Conecta2.BLL.Services.Contract;
 using Conecta2.DAL.Repositories.Contract;
 using Conecta2.DTO;
 using Conecta2.Model;
+using Conecta2.Utility;
 using Microsoft.Extensions.Logging;
 
 namespace Conecta2.BLL.Services
@@ -40,39 +41,84 @@ namespace Conecta2.BLL.Services
         }
         public async Task<SessionDTO> CheckCredentials(string email, string password)
         {
+
             try
             {
-                var queryUser = await _userRepository.Query(
-                    u => u.Email == email &&
-                    u.PasswordHash == password);
+                var queryUser = await _userRepository.Query(u => u.Email == email);
+                var userFound = queryUser.FirstOrDefault();
 
-                if (queryUser.FirstOrDefault() == null)
+                if (userFound == null || !SecurityHelper.VerifyPassword(password, userFound.PasswordHash))
+                {
                     throw new TaskCanceledException("El usuario no existe");
+                }
 
-                return _mapper.Map<SessionDTO>(queryUser);
+
+                return _mapper.Map<SessionDTO>(userFound);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error to get the user");
                 throw;
             }
+
+            //try
+            //{
+            //    var queryUser = await _userRepository.Query(
+            //        u => u.Email == email &&
+            //        u.PasswordHash == password);
+
+            //    if (queryUser.FirstOrDefault() == null)
+            //        throw new TaskCanceledException("El usuario no existe");
+
+            //    return _mapper.Map<SessionDTO>(queryUser);
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError(ex, "Error to get the user");
+            //    throw;
+            //}
         }
 
         public async Task<UserDTO> Create(UserDTO model)
         {
             try
             {
-                var userCreated = await _userRepository.Create(_mapper.Map<User>(model));
+                var userModel = _mapper.Map<User>(model);
+                //emcriptacion
+                userModel.PasswordHash = SecurityHelper.HashPassword(model.PasswordHash);
+
+                userModel.CreateAt = DateTime.UtcNow;
+                userModel.IsActive = true;
+                
+
+                var userCreated = await _userRepository.Create(userModel);
+                
                 if (userCreated.IdUser == Guid.Empty)
+                    
                     throw new TaskCanceledException("El usuario no se puedo crear ");
 
                 return _mapper.Map<UserDTO>(userCreated);
+
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating a new user");
                 throw;
             }
+
+            //try
+            //{
+            //    var userCreated = await _userRepository.Create(_mapper.Map<User>(model));
+            //    if (userCreated.IdUser == Guid.Empty)
+            //        throw new TaskCanceledException("El usuario no se puedo crear ");
+
+            //    return _mapper.Map<UserDTO>(userCreated);
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError(ex, "Error creating a new user");
+            //    throw;
+            //}
         }
         public async Task<bool> Update(UserDTO model)
         {

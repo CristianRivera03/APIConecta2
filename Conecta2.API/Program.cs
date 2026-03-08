@@ -2,6 +2,18 @@ using Conecta2.IOC;
 using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
+//agregando CORS
+builder.Services.AddCors( options =>
+{
+    options.AddPolicy("NewPolicy", app =>
+    {
+        app.AllowAnyOrigin()
+           .AllowAnyHeader()
+           .AllowAnyMethod();
+    });
+});
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -16,7 +28,8 @@ builder.Services.DependencyInyections(builder.Configuration);
 
 var app = builder.Build();
 
-
+//activando CORS
+app.UseCors("NewPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
