@@ -32,6 +32,9 @@ namespace Conecta2.Utility
             CreateMap<PostDTO, Post>()
                 .ForMember(destino => destino.IdCategoryNavigation, opt => opt.Ignore())
                 .ForMember(destino => destino.IdUserNavigation, opt => opt.Ignore());
+
+
+            CreateMap<Post, PostCreateDTO>().ReverseMap();
             #endregion post
 
             #region category

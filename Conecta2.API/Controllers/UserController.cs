@@ -45,16 +45,27 @@ namespace Conecta2.API.Controllers
             var rsp = new Response<SessionDTO>();
             try
             {
+                var session = await _userService.CheckCredentials(login.Email, login.Password);
                 rsp.status = true;
-                rsp.value = await _userService.CheckCredentials(login.Email, login.Password);
+                rsp.value = session;
+
+                return Ok(rsp); //200
+            }
+            catch (TaskCanceledException ex)
+            {
+                rsp.status = false;
+                rsp.msg = ex.Message;
+
+                return Unauthorized(rsp); //401 fallos de auth
             }
             catch (Exception ex)
             {
                 rsp.status = false;
-                rsp.msg = ex.Message;
+                rsp.msg = "Ocurrio un error inesperado";
+
+                return StatusCode(StatusCodes.Status500InternalServerError, rsp);
             }
 
-            return Ok(rsp);
         }
 
 

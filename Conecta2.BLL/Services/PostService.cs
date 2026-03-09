@@ -41,7 +41,7 @@ namespace Conecta2.BLL.Services
             }
         }
 
-        public async Task<PostDTO> Create(PostDTO model)
+        public async Task<PostCreateDTO> Create(PostCreateDTO model)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace Conecta2.BLL.Services
                 if (postCreated.IdPost == Guid.Empty)
                     throw new TaskCanceledException("El post no se pudo crear");
 
-                return _mapper.Map<PostDTO>(postCreated);
+                return _mapper.Map<PostCreateDTO>(postCreated);
             }
             catch (Exception ex)
             {
@@ -122,7 +122,5 @@ namespace Conecta2.BLL.Services
                 throw;
             }
         }
-
-
     }
 }

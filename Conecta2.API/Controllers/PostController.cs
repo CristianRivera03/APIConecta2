@@ -38,5 +38,38 @@ namespace Conecta2.API.Controllers
             return Ok(rsp);
         }
 
+
+
+        [HttpPost]
+        [Route("Create")]
+        public async Task<IActionResult> Create([FromBody] PostCreateDTO post)
+        {
+            var rsp = new Response<PostCreateDTO>();
+            try
+            {
+                if(post == null)
+                {
+                    rsp.status = false;
+                    rsp.msg = "los datos son requeridos";
+                    return BadRequest(rsp);
+                }
+                else
+                {
+                   var session = await _postService.Create(post);
+                    rsp.status = true;
+                    rsp.value = session;
+                    return Ok(rsp); 
+
+                }
+            }
+            catch (Exception ex)
+            {
+                rsp.status = false;
+                rsp.msg = ex.Message;
+                return Ok(rsp);  
+            }
+
+        }
+
     }
 }
