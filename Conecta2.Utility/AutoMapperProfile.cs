@@ -14,7 +14,14 @@ namespace Conecta2.Utility
         public AutoMapperProfile()
         {
             #region user
-            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserDTO>()
+                .ForMember(destino =>
+                    destino.RoleName,
+                    opt => opt.MapFrom(origen => origen.IdRoleNavigation.NameRol));
+
+
+            CreateMap<UserCreateDTO, User>();
+
             #endregion user
 
             #region post
@@ -43,7 +50,10 @@ namespace Conecta2.Utility
 
             #region session
 
-            CreateMap<User, SessionDTO>();
+            CreateMap<User, SessionDTO>()
+                .ForMember(destino =>
+                    destino.RoleName,
+                    opt => opt.MapFrom(origen => origen.IdRoleNavigation.NameRol));
 
             #endregion session
 
@@ -52,6 +62,9 @@ namespace Conecta2.Utility
             CreateMap<LoginDTO, User>();
 
             #endregion login
+
+
+
 
 
         }

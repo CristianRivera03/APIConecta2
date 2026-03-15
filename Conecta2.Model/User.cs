@@ -23,5 +23,9 @@ public partial class User
 
     public DateTime? DeleteAt { get; set; }
 
+    public int IdRole { get; set; }
+
+    public virtual Role IdRoleNavigation { get; set; } = null!;
+
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }

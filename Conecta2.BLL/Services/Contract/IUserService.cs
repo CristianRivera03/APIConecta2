@@ -10,7 +10,7 @@ namespace Conecta2.BLL.Services.Contract
     {
         Task<List<UserDTO>> GetAllAsync();
         Task<SessionDTO> CheckCredentials(string email , string password);
-        Task<UserDTO> Create(UserDTO model);
+        Task<UserDTO> Create(UserCreateDTO model);
         Task<bool> Update(UserDTO model);
         Task<bool> Delete(Guid id);
 

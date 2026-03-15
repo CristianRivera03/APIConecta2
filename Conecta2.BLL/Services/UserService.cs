@@ -9,6 +9,7 @@ using Conecta2.DAL.Repositories.Contract;
 using Conecta2.DTO;
 using Conecta2.Model;
 using Conecta2.Utility;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Conecta2.BLL.Services
@@ -30,8 +31,10 @@ namespace Conecta2.BLL.Services
         {
             try
             {
-                var listUsers = await _userRepository.Query();
-                return _mapper.Map<List<UserDTO>>(listUsers.ToList());
+                var query = await _userRepository.Query();
+                //join
+                var listUsers = await query.Include(u => u.IdRoleNavigation).Where(u => u.IsActive ==true).ToListAsync();
+                return _mapper.Map<List<UserDTO>>(listUsers);
             }
             catch (Exception ex)
             {
@@ -45,7 +48,8 @@ namespace Conecta2.BLL.Services
             try
             {
                 var queryUser = await _userRepository.Query(u => u.Email == email);
-                var userFound = queryUser.FirstOrDefault();
+
+                var userFound = queryUser.Include(u => u.IdRoleNavigation).Where(u => u.IsActive == true).FirstOrDefault();
 
                 if (userFound == null || !SecurityHelper.VerifyPassword(password, userFound.PasswordHash))
                 {
@@ -79,14 +83,15 @@ namespace Conecta2.BLL.Services
             //}
         }
 
-        public async Task<UserDTO> Create(UserDTO model)
+        public async Task<UserDTO> Create(UserCreateDTO model)
         {
             try
             {
                 var userModel = _mapper.Map<User>(model);
                 //emcriptacion
-                userModel.PasswordHash = SecurityHelper.HashPassword(model.PasswordHash);
+                userModel.PasswordHash = SecurityHelper.HashPassword(model.Password);
 
+                userModel.IdRole = 3;
                 userModel.CreateAt = DateTime.UtcNow;
                 userModel.IsActive = true;
                 

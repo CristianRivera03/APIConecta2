@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿using Conecta2.API.Utility;
+using Conecta2.BLL.Services;
 using Conecta2.BLL.Services.Contract;
 using Conecta2.DTO;
-using Conecta2.API.Utility;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Conecta2.API.Controllers
 {
@@ -69,10 +69,54 @@ namespace Conecta2.API.Controllers
         }
 
 
+        //Endpoint para eliminar usuario
+        [HttpDelete]
+        [Route("Delete/{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var rsp = new Response<bool>();
+            try
+            {
+                bool result = await _userService.Delete(id);
+
+                if (result)
+                {
+                    rsp.status = true;
+                    rsp.value = result;
+                    rsp.msg = "usuario eliminado con exito";
+
+                    return Ok(rsp);
+                }
+                else
+                {
+                    rsp.status = false;
+                    rsp.msg = "No se pudo eliminar";
+                    return BadRequest(rsp);
+                }
+            }
+            catch (TaskCanceledException ex)
+            {
+                // Si no se encuentra el servicio
+                rsp.status = false;
+                rsp.msg = ex.Message;
+                return NotFound(rsp); //  HTTP 404 si el post no existe
+            }
+            catch (Exception ex)
+            {
+                //  errores del servidor
+                rsp.status = false;
+                rsp.msg = "Ocurrió un error interno en el servidor.";
+                return StatusCode(StatusCodes.Status500InternalServerError, rsp);
+            }
+
+        }
+
+
+
         //Endpoint para crear usuario
         [HttpPost]
         [Route("Create")]
-        public async Task<IActionResult> Create([FromBody] UserDTO user)
+        public async Task<IActionResult> Create([FromBody] UserCreateDTO user)
         {
             var rsp = new Response<UserDTO>();
             try

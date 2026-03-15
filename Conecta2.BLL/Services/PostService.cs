@@ -30,7 +30,10 @@ namespace Conecta2.BLL.Services
                 var queryPost = await _postRepository.Query();
                 var listPost = queryPost
                     .Include(p => p.IdCategoryNavigation)
-                    .Include(p => p.IdUserNavigation).ToList();
+                    .Include(p => p.IdUserNavigation)
+                    //condicional para mostrar los no borrados
+                    .Where(p => p.IsDeleted == false)
+                    .ToList();
 
                 return _mapper.Map<List<PostDTO>>(listPost);
             }

@@ -4,13 +4,12 @@ using System.Text;
 
 namespace Conecta2.DTO
 {
-    public class SessionDTO
+    public class UserCreateDTO
     {
-        public Guid IdUser { get; set; }
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string? NameUser { get; set; }
-        public string? LastnameUser { get; set; }
-        public string? RoleName { get; set; }
+        public string Password { get; set; } = null!;
+        public string NameUser { get; set; } = null!;
+        public string LastnameUser { get; set; } = null!;
     }
 }

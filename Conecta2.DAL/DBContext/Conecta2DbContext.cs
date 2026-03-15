@@ -90,6 +90,20 @@ public partial class Conecta2DbContext : DbContext
                 .HasConstraintName("posts_id_user_fkey");
         });
 
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.IdRole).HasName("role_pkey");
+
+            entity.ToTable("role");
+
+            entity.HasIndex(e => e.NameRol, "role_name_rol_key").IsUnique();
+
+            entity.Property(e => e.IdRole).HasColumnName("id_role");
+            entity.Property(e => e.NameRol)
+                .HasMaxLength(100)
+                .HasColumnName("name_rol");
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.IdUser).HasName("users_pkey");
@@ -110,6 +124,9 @@ public partial class Conecta2DbContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .HasColumnName("email");
+            entity.Property(e => e.IdRole)
+                .HasDefaultValue(3)
+                .HasColumnName("id_role");
             entity.Property(e => e.IsActive)
                 .HasDefaultValue(true)
                 .HasColumnName("is_active");
@@ -123,6 +140,11 @@ public partial class Conecta2DbContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(30)
                 .HasColumnName("username");
+
+            entity.HasOne(d => d.IdRoleNavigation).WithMany(p => p.Users)
+                .HasForeignKey(d => d.IdRole)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_User_Role");
         });
 
         OnModelCreatingPartial(modelBuilder);
