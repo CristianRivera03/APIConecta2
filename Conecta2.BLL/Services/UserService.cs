@@ -47,23 +47,32 @@ namespace Conecta2.BLL.Services
 
             try
             {
-                var queryUser = await _userRepository.Query(u => u.Email == email);
+                //se envuelve el pack del query luego se le hacen los include y where correspondientes
 
-                var userFound = queryUser.Include(u => u.IdRoleNavigation).Where(u => u.IsActive == true).FirstOrDefault();
+                var queryUser =  await _userRepository
+                    .Query(u => u.Email == email && u.IsActive == true);
+
+                var userFound = await queryUser
+                    .Include(u => u.IdRoleNavigation)
+                    .ThenInclude(r => r.Rolemodules)
+                    .ThenInclude(rm => rm.Module)
+                    .FirstOrDefaultAsync();
 
                 if (userFound == null || !SecurityHelper.VerifyPassword(password, userFound.PasswordHash))
                 {
-                    throw new TaskCanceledException("El usuario no existe");
+                    throw new UnauthorizedAccessException("El usuario no existe o la contraseña es incorrecta");
                 }
 
+      
 
                 return _mapper.Map<SessionDTO>(userFound);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error to get the user");
-                throw;
-            }
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error to get the user");
+                    throw;
+                }
 
             //try
             //{
@@ -125,6 +134,7 @@ namespace Conecta2.BLL.Services
             //    throw;
             //}
         }
+
         public async Task<bool> Update(UserDTO model)
         {
 
@@ -153,7 +163,6 @@ namespace Conecta2.BLL.Services
                 throw;
             }
         }
-
 
         public async Task<bool> Delete(Guid id)
         {

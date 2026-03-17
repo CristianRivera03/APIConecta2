@@ -28,6 +28,7 @@ namespace Conecta2.BLL.Services
             _logger = logger;
         }
 
+
         public async Task<List<CategoryDTO>> GetAllAsync()
         {
             try

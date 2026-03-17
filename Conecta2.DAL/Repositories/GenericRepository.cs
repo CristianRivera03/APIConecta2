@@ -102,5 +102,32 @@ namespace Conecta2.DAL.Repositories
             }
         }
 
+        public async Task<bool> RemoveRange(IEnumerable<TModel> entities)
+        {
+            try
+            {
+                _dbcontext.Set<TModel>().RemoveRange(entities);
+                await _dbcontext.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> AddRange(IEnumerable<TModel> entities)
+        {
+            try
+            {
+                _dbcontext.Set<TModel>().AddRange(entities);
+                await _dbcontext.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

@@ -18,6 +18,8 @@ namespace Conecta2.DAL.Repositories.Contract
         Task<bool> Update(TModel model);
         Task<bool> Delete(TModel model);
         Task<bool> SoftDelete(TModel model);
+        Task<bool> RemoveRange(IEnumerable<TModel> entities);
+        Task<bool> AddRange(IEnumerable<TModel> entities);
         Task<IQueryable<TModel>> Query(Expression<Func<TModel, bool>> filter = null);
         
     }

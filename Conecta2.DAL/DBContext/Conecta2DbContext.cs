@@ -18,7 +18,13 @@ public partial class Conecta2DbContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<Module> Modules { get; set; }
+
     public virtual DbSet<Post> Posts { get; set; }
+
+    public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<Rolemodule> Rolemodules { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -44,6 +50,27 @@ public partial class Conecta2DbContext : DbContext
             entity.Property(e => e.NameCategory)
                 .HasMaxLength(100)
                 .HasColumnName("name_category");
+        });
+
+        modelBuilder.Entity<Module>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("modules_pkey");
+
+            entity.ToTable("modules");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Icon)
+                .HasMaxLength(50)
+                .HasColumnName("icon");
+            entity.Property(e => e.Isactive)
+                .HasDefaultValue(true)
+                .HasColumnName("isactive");
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .HasColumnName("name");
+            entity.Property(e => e.Path)
+                .HasMaxLength(150)
+                .HasColumnName("path");
         });
 
         modelBuilder.Entity<Post>(entity =>
@@ -102,6 +129,28 @@ public partial class Conecta2DbContext : DbContext
             entity.Property(e => e.NameRol)
                 .HasMaxLength(100)
                 .HasColumnName("name_rol");
+        });
+
+        modelBuilder.Entity<Rolemodule>(entity =>
+        {
+            entity.HasKey(e => new { e.Roleid, e.Moduleid }).HasName("rolemodules_pkey");
+
+            entity.ToTable("rolemodules");
+
+            entity.Property(e => e.Roleid).HasColumnName("roleid");
+            entity.Property(e => e.Moduleid).HasColumnName("moduleid");
+            entity.Property(e => e.Createdat)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdat");
+
+            entity.HasOne(d => d.Module).WithMany(p => p.Rolemodules)
+                .HasForeignKey(d => d.Moduleid)
+                .HasConstraintName("fk_rolemodules_modules");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Rolemodules)
+                .HasForeignKey(d => d.Roleid)
+                .HasConstraintName("fk_rolemodules_roles");
         });
 
         modelBuilder.Entity<User>(entity =>

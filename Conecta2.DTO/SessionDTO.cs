@@ -12,5 +12,8 @@ namespace Conecta2.DTO
         public string? NameUser { get; set; }
         public string? LastnameUser { get; set; }
         public string? RoleName { get; set; }
+
+        // mostrar los roles disponibles
+        public List<ModuleDTO> AllowedModules { get; set; } = null!;
     }
 }

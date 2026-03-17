@@ -13,6 +13,13 @@ namespace Conecta2.Utility
     {
         public AutoMapperProfile()
         {
+
+            #region module
+
+            CreateMap<Module, ModuleDTO>();
+
+            #endregion module
+
             #region user
             CreateMap<User, UserDTO>()
                 .ForMember(destino =>
@@ -53,7 +60,14 @@ namespace Conecta2.Utility
             CreateMap<User, SessionDTO>()
                 .ForMember(destino =>
                     destino.RoleName,
-                    opt => opt.MapFrom(origen => origen.IdRoleNavigation.NameRol));
+                    opt => opt.MapFrom(origen => origen.IdRoleNavigation.NameRol))
+
+
+                .ForMember(destino =>
+                    destino.AllowedModules,
+                    //saca el modulo de cada registro rm module
+                    opt => opt.MapFrom(origen => origen.IdRoleNavigation.Rolemodules.Select(rm => rm.Module))
+                );
 
             #endregion session
 
@@ -63,7 +77,18 @@ namespace Conecta2.Utility
 
             #endregion login
 
+            #region role
 
+            CreateMap<CreateRoleDTO, Role>();
+            CreateMap<Role, RoleDTO>();
+
+            #endregion role
+
+
+            #region ChangeRoleUser
+            CreateMap<ChangeUserRoleDTO, User>();
+
+            #endregion ChangeRoleUser
 
 
 

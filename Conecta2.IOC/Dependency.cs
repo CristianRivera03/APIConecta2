@@ -36,5 +36,7 @@ public static class Dependency
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IPostService, PostService>();
+        services.AddScoped<IModuleService, ModuleService>();
+        services.AddScoped<IRoleService, RoleService>();
     }
 }
