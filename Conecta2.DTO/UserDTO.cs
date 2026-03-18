@@ -15,5 +15,7 @@ namespace Conecta2.DTO
         public string? LastnameUser { get; set; }
         public bool? IsActive { get; set; }
         public string? RoleName { get; set; }
+        public int IdRole { get; set; }
+
     }
 }

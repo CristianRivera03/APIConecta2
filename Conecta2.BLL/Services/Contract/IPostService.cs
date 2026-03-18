@@ -13,5 +13,7 @@ namespace Conecta2.BLL.Services.Contract
         Task<bool> Update(PostDTO model);
         Task<bool> Delete(Guid id);
 
+
+
     }
 }

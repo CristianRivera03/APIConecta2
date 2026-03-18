@@ -4,6 +4,7 @@ using Conecta2.BLL.Services.Contract;
 using Conecta2.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Conecta2.API.Controllers
 {
@@ -36,6 +37,29 @@ namespace Conecta2.API.Controllers
 
             return Ok(rsp);
         }
+
+        //Endpoint para cambiar el role
+        [HttpPut]
+        [Route("ChangeRole")]
+        public async Task<IActionResult> ChangeRole([FromBody] ChangeUserRoleDTO request)
+        {
+            var rsp = new Response<bool>();
+
+            try
+            {
+                rsp.status = await _userService.ChangeUserRole(request);
+                rsp.value = rsp.status;
+                rsp.msg = "Rol de usuario actualizado correctamente";
+                return Ok(rsp);
+            }
+            catch (Exception ex)
+            {
+                rsp.status = false;
+                rsp.msg = "Error al intentar cambiar el rol de usuario";
+                return StatusCode(500, rsp);
+            }
+        }
+        
 
         //Endpoint para hacer login  
         [HttpPost]

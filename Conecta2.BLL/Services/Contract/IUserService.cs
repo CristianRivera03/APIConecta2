@@ -13,6 +13,7 @@ namespace Conecta2.BLL.Services.Contract
         Task<UserDTO> Create(UserCreateDTO model);
         Task<bool> Update(UserDTO model);
         Task<bool> Delete(Guid id);
+        Task<bool> ChangeUserRole(ChangeUserRoleDTO request);
 
     }
 }

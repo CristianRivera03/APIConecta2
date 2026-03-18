@@ -27,6 +27,32 @@ namespace Conecta2.BLL.Services
             _logger = logger;
         }
 
+        public async Task<bool> ChangeUserRole(ChangeUserRoleDTO request)
+        {
+            try
+            {
+                var query = await _userRepository.Query();
+                var user = await query.FirstOrDefaultAsync(u => u.IdUser == request.IdUser);
+
+                if (user == null)
+                {
+                    throw new Exception("El usuario no existe");
+                }
+
+                // se modifica el idrike del user
+                user.IdRole = request.IdRole;
+
+                bool result = await _userRepository.Update(user);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cambiar el rol de usuario {IdUser}", request.IdUser);
+                throw;
+            }
+        }
+
         public async Task<List<UserDTO>> GetAllAsync()
         {
             try
@@ -42,6 +68,7 @@ namespace Conecta2.BLL.Services
                 throw;
             }
         }
+   
         public async Task<SessionDTO> CheckCredentials(string email, string password)
         {
 
@@ -190,5 +217,7 @@ namespace Conecta2.BLL.Services
                 throw;
             }
         }
+
+        
     }
 }

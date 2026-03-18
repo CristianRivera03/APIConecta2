@@ -23,6 +23,7 @@ namespace Conecta2.BLL.Services
             _mapper = mapper;
             _logger = logger;
         }
+
         public async Task<List<PostDTO>> GetAllAsync()
         {
             try
@@ -125,5 +126,7 @@ namespace Conecta2.BLL.Services
                 throw;
             }
         }
+
+        
     }
 }
